@@ -47,4 +47,5 @@ chmod +x $bp_dir/vendor/node/bin/*
 export PATH=$bp_dir/vendor/node/bin:$PATH
 
 echo "Installing dependencies"
-npm install --userconfig $bp_dir/.npmrc | indent
+cd $app_dir
+npm install --userconfig $app_dir/.npmrc | indent
