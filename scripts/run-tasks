@@ -5,6 +5,10 @@ app_dir=$1
 bp_dir=$(cd $(dirname $0); cd ..; pwd)
 export PATH=$bp_dir/vendor/node/bin:$bd_dir/node_modules/.bin:$bp_dir/scripts:$bp_dir/vendor:$PATH
 
+echo "run_tasks/pwd: $PWD"
+echo "run_tasks/app_dir: $app_dir"
+echo "run_tasks/bp_dir: $bp_dir"
+
 source $bp_dir/scripts/common.sh
 
 echo "Getting build task"
