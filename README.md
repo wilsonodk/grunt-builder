@@ -1,4 +1,4 @@
-# ICT Grunt Builder v1.1.3
+# ICT Grunt Builder v1.0.0
 
 A set of generic scripts to run [Grunt][gruntjs] tasks at build time.
 
