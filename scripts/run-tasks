@@ -1,0 +1,25 @@
+#!/bin/bash
+set -e
+
+bp_dir=$(cd $(dirname $0); cd ..; pwd)
+app_dir=$(cd $(dirname $0); cd ../..; pwd)
+export PATH=$bp_dir/vendor/node/bin:$bd_dir/node_modules/.bin:$bp_dir/scripts:$bp_dir/vendor:$PATH
+
+source $bp_dir/scripts/common.sh
+
+echo "Getting build task"
+if [ -z "$GRUNTCMD" ]; then
+    # Check to see if we have a npm run build
+    npm_cmd=$(cat package.json | jq -r .scripts.build)
+    if [ -z "$npm_cmd" ]; then
+        echo "No GRUNTCMD and no scripts.build"
+        exit -1
+    else
+        echo "Using default"
+        GRUNTCMD="npm run build"
+    fi
+fi
+
+cd $app_dir
+echo "Command: $GRUNTCMD"
+$GRUNTCMD | indent

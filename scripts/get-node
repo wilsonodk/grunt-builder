@@ -1,0 +1,50 @@
+#!/bin/bash
+set -e
+
+bp_dir=$(cd $(dirname $0); cd ..; pwd)
+app_dir=$(cd $(dirname $0); cd ../..; pwd)
+export PATH=$bp_dir/scripts:$bp_dir/vendor:$PATH
+
+echo "bp_dir: $bp_dir"
+echo "app_dir: $app_dir"
+
+source $bp_dir/scripts/common.sh
+
+platform=$(uname -s | tr '[:upper:]' '[:lower:]')
+
+if [ ! -f $app_dir/package.json ]; then
+    echo "no package.json" >&2
+    exit -3
+fi
+
+# Look in package.json's engines.node field for a semver range
+semver_range=$(cat $app_dir/package.json | $bp_dir/vendor/jq -r .engines.node)
+
+# Exit on bad range
+if [ -z "$semver_range" ]; then
+    echo "engines.node is required" >&2
+    exit -2
+fi
+
+# Resolve node version using semver.io
+node_version=$(curl --silent --get --data-urlencode "range=${semver_range}" https://semver.io/node/resolve)
+
+# Output info about requested range and resolved node version
+if [ "$semver_range" == "" ]; then
+  echo "Defaulting to latest stable node: $node_version"
+else
+  echo "Requested node range:  $semver_range"
+  echo "Resolved node version: $node_version"
+fi
+
+echo "Downloading and installing node (v${node_version})"
+node_url="http://nodejs.org/dist/v${node_version}/node-v${node_version}-${platform}-x64.tar.gz" 
+curl $node_url -s -o - | tar xzf - -C $bp_dir
+
+# Move node and npm into vendor, make them executable
+mv $bp_dir/node-v${node_version}-${platform}-x64 $bp_dir/vendor/node
+chmod +x $bp_dir/vendor/node/bin/*
+export PATH=$bp_dir/vendor/node/bin:$PATH
+
+echo "Installing dependencies"
+npm install --userconfig $bp_dir/.npmrc | indent
