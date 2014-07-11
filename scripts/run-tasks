@@ -10,7 +10,7 @@ source $bp_dir/scripts/common.sh
 echo "Getting build task"
 if [ -z "$GRUNTCMD" ]; then
     # Check to see if we have a npm run build
-    npm_cmd=$(cat package.json | jq -r .scripts.build)
+    npm_cmd=$(cat $app_dir/package.json | jq -r .scripts.build)
     if [ -z "$npm_cmd" ]; then
         echo "No GRUNTCMD and no scripts.build"
         exit -1
