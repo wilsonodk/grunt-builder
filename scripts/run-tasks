@@ -1,8 +1,8 @@
 #!/bin/bash
 set -e
 
+app_dir=$1
 bp_dir=$(cd $(dirname $0); cd ..; pwd)
-app_dir=$(cd $(dirname $0); cd ../..; pwd)
 export PATH=$bp_dir/vendor/node/bin:$bd_dir/node_modules/.bin:$bp_dir/scripts:$bp_dir/vendor:$PATH
 
 source $bp_dir/scripts/common.sh
