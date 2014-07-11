@@ -1,4 +1,4 @@
-# Grunt Builder v1.0.1
+# Grunt Builder v1.0.2
 
 A set of generic scripts to run [Grunt][gruntjs] tasks at build time.
 
