@@ -18,10 +18,10 @@ if [ ! -f $app_dir/package.json ]; then
 fi
 
 # Look in package.json's engines.node field for a semver range
-semver_range=$(cat $app_dir/package.json | $bp_dir/vendor/jq -r .engines.node)
+semver_range=$(cat "$app_dir/package.json" | "$bp_dir/vendor/jq" -r .engines.node)
 
 # Exit on bad range
-if [ -z "$semver_range" ]; then
+if [[ -z $semver_range ]]; then
     echo "engines.node is required" >&2
     exit -2
 fi
@@ -39,13 +39,13 @@ fi
 
 echo "Downloading and installing node (v${node_version})"
 node_url="http://nodejs.org/dist/v${node_version}/node-v${node_version}-${platform}-x64.tar.gz" 
-curl $node_url -s -o - | tar xzf - -C $bp_dir
+curl -L "$node_url" -s -o - | tar xzf - -C "$bp_dir"
 
 # Move node and npm into vendor, make them executable
-mv $bp_dir/node-v${node_version}-${platform}-x64 $bp_dir/vendor/node
-chmod +x $bp_dir/vendor/node/bin/*
+mv "$bp_dir/node-v${node_version}-${platform}-x64" "$bp_dir/vendor/node"
+chmod +x "$bp_dir"/vendor/node/bin/*
 export PATH=$bp_dir/vendor/node/bin:$PATH
 
 echo "Installing dependencies"
-cd $app_dir
-npm install --userconfig $app_dir/.npmrc | indent
+cd "$app_dir"
+npm install --userconfig "$app_dir/.npmrc" | indent
